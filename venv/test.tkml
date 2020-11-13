@@ -1,0 +1,3 @@
+[label:myLabel](width="" height="" bg="" fg=""):"Hello, World"
+[label:myLabel_2]():"Foo bar"
+[button:myButton]():"my button"
