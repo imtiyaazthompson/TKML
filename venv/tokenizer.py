@@ -1,6 +1,6 @@
 from _widget import Token
 from widget_type import WidgetType
-from exceptionlib import InvalidTokenException, TokenTextException
+from exceptionlib import InvalidTokenException, TokenTextException, BrokenFrameException
 import re
 
 
@@ -12,14 +12,31 @@ def tokenize(line):
     pattern_args_lb = "\((width=\"(\d*)\"\s+height=\"(\d*)\"\s+bg=\"([a-z|0-9]*)\"\s+fg=\"([a-z|0-9]*)\")*\)"
     pattern_args_entry = "\((fg=\"([a-z|0-9]*)\"\s+bg=\"([a-z|0-9]*)\"\s+width=\"(\d*)\")*\)"
     pattern_msg = ":\"(\s*.*)\""
+    pattern_endframe = "(\s*\})"
 
     # Match token type, arguments and message
     # re.search searches anywhere in the string, not just the beginning
-    match_type_name = re.search(pattern_type_name, line)
+    if "}" not in line:
+        match_type_name = re.search(pattern_type_name, line)
+    else:
+        match_type_name = re.search(pattern_endframe, line)
     token_type, token_name = get_type_name(match_type_name)
+
+    if token_type == WidgetType.STARTFRAME:
+        match = re.search("\s*\{", line)
+        if match is None:
+            raise BrokenFrameException("Opening frame delimiter is missing")
+        else:
+            return Token(token_type, token_name, None, None)
+
+    if token_type == WidgetType.ENDFRAME:
+        return Token(token_type, token_name, None, None)
+
     if token_type == WidgetType.ENTRY:
         match_args = re.search(pattern_args_entry, line)
         arguments = get_args_entry(match_args)
+    elif token_type == WidgetType.STARTFRAME or token_type == WidgetType.ENDFRAME:
+        return Token(token_type, token_name, None, None)
     else:
         match_args = re.search(pattern_args_lb, line)
         arguments = get_args_lb(match_args)
@@ -37,8 +54,12 @@ def get_type_name(match):
     if match is None:
         raise InvalidTokenException("Token incorrectly named")
 
-    tok_type = match.groups()[0]
-    name = match.groups()[1]
+    if len(match.groups()) != 1:
+        tok_type = match.groups()[0]
+        name = match.groups()[1]
+    else:
+        tok_type = match.groups()[0]
+        name = "endframe"
 
     ttype = None
     if tok_type == "label":
@@ -47,6 +68,10 @@ def get_type_name(match):
         ttype = WidgetType.BUTTON
     if tok_type == "entry":
         ttype = WidgetType.ENTRY
+    if tok_type == "frame":
+        ttype = WidgetType.STARTFRAME
+    if tok_type == "}":
+        ttype = WidgetType.ENDFRAME
 
     return ttype, name
 

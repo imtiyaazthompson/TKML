@@ -1,5 +1,6 @@
 from widget_type import WidgetType
 
+
 # Order for packing widgets
 
 def write_runner():
@@ -20,6 +21,7 @@ def write_setup(tokens):
     setup = "def setup():"
     callbacks = []
 
+    current_frame = None
     for token in tokens:
         info = token.get_info()
         name = token.get_name()
@@ -36,52 +38,112 @@ def write_setup(tokens):
 
         if token.get_type() == WidgetType.LABEL:
             if bg == - 1 and fg != -1:
-                setup = insert_statement(
-                    f"widgets['{name}'] = tk.Label(text='{token.get_text()}',width={width},height={height},fg={fg})",
-                    setup)
+                if current_frame is None:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Label(text='{token.get_text()}',width={width},height={height},fg={fg})",
+                        setup)
+                else:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Label(master=widgets[\"{current_frame}\"],text='{token.get_text()}',width={width},"
+                        f"height={height},fg={fg})", setup)
             elif fg == -1 and bg != -1:
-                setup = insert_statement(
-                    f"widgets['{name}'] = tk.Label(text='{token.get_text()}',width={width},height={height},bg={bg})",
-                    setup)
+                if current_frame is None:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Label(text='{token.get_text()}',width={width},height={height},bg={bg})",
+                        setup)
+                else:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Label(master=widgets[\"{current_frame}\"]text='{token.get_text()}',width={width},"
+                        f"height={height},bg={bg})", setup)
             elif bg == -1 and fg == -1:
-                setup = insert_statement(
-                    f"widgets['{name}'] = tk.Label(text='{token.get_text()}',width={width},height={height})", setup)
+                if current_frame is None:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Label(text='{token.get_text()}',width={width},height={height})", setup)
+                else:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Label(master=widgets[\"{current_frame}\"],text='{token.get_text()}',width={width},"
+                        f"height={height})", setup)
             else:
-                setup = insert_statement(
-                    f"widgets['{name}'] = tk.Label(text='{token.get_text()}',width={width},height={height},bg={bg},"
-                    f"fg={fg})", setup)
+                if current_frame is None:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Label(text='{token.get_text()}',width={width},"
+                        f"height={height},bg={bg},fg={fg})", setup)
+                else:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Label(master=widgets[\"{current_frame}\"],text='{token.get_text()}',width={width},"
+                        f"height={height},bg={bg},fg={fg})", setup)
         elif token.get_type() == WidgetType.BUTTON:
             callback_name = name + "_callback"
             callback = "def " + callback_name + "():\n\t# Callback for this button when clicked\n\tpass\n\n"
             callbacks.append(callback)
             if bg == - 1 and fg != -1:
-                setup = insert_statement(
-                    f"widgets['{name}'] = tk.Button(text='{token.get_text()}',width={width},height={height},fg=\"{fg}\","
-                    f"command=lambda: {callback_name}('''Your arguments go here'''))", setup)
+                if current_frame is None:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Button(text='{token.get_text()}',width={width},height={height},fg=\"{fg}\","
+                        f"command=lambda: {callback_name}('''Your arguments go here'''))", setup)
+                else:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Button(master=widgets[\"{current_frame}\"],text='{token.get_text()}',width={width},"
+                        f"height={height},fg=\"{fg}\",command=lambda: {callback_name}('''Your arguments go here'''))", setup)
             elif fg == -1 and bg != -1:
-                setup = insert_statement(
-                    f"widgets['{name}'] = tk.Button(text='{token.get_text()}',width={width},height={height},bg=\"{bg}\","
-                    f"command=lambda: {callback_name}('''Your arguments go here'''))", setup)
+                if current_frame is None:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Button(text='{token.get_text()}',width={width},height={height},bg=\"{bg}\","
+                        f"command=lambda: {callback_name}('''Your arguments go here'''))", setup)
+                else:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Button(master=widgets[\"{current_frame}\"],text='{token.get_text()}',width={width},"
+                        f"height={height},bg=\"{bg}\",command=lambda: {callback_name}('''Your arguments go here'''))", setup)
             elif bg == -1 and fg == -1:
-                setup = insert_statement(
-                    f"widgets['{name}'] = tk.Button(text='{token.get_text()}',width={width},height={height},"
-                    f"command=lambda: {callback_name}('''Your arguments go here'''))", setup)
+                if current_frame is None:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Button(text='{token.get_text()}',width={width},height={height},"
+                        f"command=lambda: {callback_name}('''Your arguments go here'''))", setup)
+                else:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Button(master=widgets[\"{current_frame}\"],text='{token.get_text()}',width={width},"
+                        f"height={height},command=lambda: {callback_name}('''Your arguments go here'''))", setup)
             else:
-                setup = insert_statement(
-                    f"widgets['{name}'] = tk.Button(text='{token.get_text()}',width={width},height={height},bg=\"{bg}\","
-                    f"fg=\"{fg}\",command=lambda: {callback_name}('''Your arguments go here'''))", setup)
+                if current_frame is None:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Button(text='{token.get_text()}',width={width},height={height},bg=\"{bg}\","
+                        f"fg=\"{fg}\",command=lambda: {callback_name}('''Your arguments go here'''))", setup)
+                else:
+                    setup = insert_statement(
+                        f"widgets['{name}'] = tk.Button(master=widgets[\"{current_frame}\"],text='{token.get_text()}',width={width},"
+                        f"height={height},bg=\"{bg}\",fg=\"{fg}\",command=lambda: {callback_name}('''Your arguments go here'''))",
+                        setup)
         elif token.get_type() == WidgetType.ENTRY:
             if bg == - 1 and fg != -1:
-                setup = insert_statement(f"widgets['{name}'] = tk.Entry(fg=\"{fg}\",width={width})", setup)
+                if current_frame is None:
+                    setup = insert_statement(f"widgets['{name}'] = tk.Entry(fg=\"{fg}\",width={width})", setup)
+                else:
+                    setup = insert_statement(f"widgets['{name}'] = tk.Entry(master=widgets[\"{current_frame}\"],fg=\"{fg}\","
+                                             f"width={width})", setup)
             elif fg == -1 and bg != -1:
-                setup = insert_statement(f"widgets['{name}'] = tk.Entry(bg=\"{bg}\",width={width})", setup)
+                if current_frame is None:
+                    setup = insert_statement(f"widgets['{name}'] = tk.Entry(bg=\"{bg}\",width={width})", setup)
+                else:
+                    setup = insert_statement(f"widgets['{name}'] = tk.Entry(master=widgets[\"{current_frame}\"],bg=\"{bg}\","
+                                             f"width={width})", setup)
             elif bg == -1 and fg == -1:
-                setup = insert_statement(f"widgets['{name}'] = tk.Entry(width={width})", setup)
+                if current_frame is None:
+                    setup = insert_statement(f"widgets['{name}'] = tk.Entry(width={width})", setup)
+                else:
+                    setup = insert_statement(f"widgets['{name}'] = tk.Entry(master=widgets[\"{current_frame}\"],width={width})", setup)
             else:
-                setup = insert_statement(f"widgets['{name}'] = tk.Entry(fg=\"{fg}\",bg=\"{bg}\",width={width})", setup)
-
+                if current_frame is None:
+                    setup = insert_statement(f"widgets['{name}'] = tk.Entry(fg=\"{fg}\",bg=\"{bg}\",width={width})", setup)
+                else:
+                    setup = insert_statement(f"widgets['{name}'] = tk.Entry(master=widgets[\"{current_frame}\"],fg=\"{fg}\","
+                                             f"bg=\"{bg}\",width={width})", setup)
             if token.get_text() != "":
                 setup = insert_statement(f"widgets['{name}'].insert(0,\"{token.get_text()}\")", setup)
+        elif token.get_type() == WidgetType.STARTFRAME:
+            setup = insert_statement(f"widgets[\"{name}\"] = tk.Frame()", setup)
+            current_frame = name
+        elif token.get_type() == WidgetType.ENDFRAME:
+            current_frame = None
 
     callbacks.append("def get_text_from(entry):\n\treturn entry.get()\n\n")
     setup = insert_statement("return widgets", setup)

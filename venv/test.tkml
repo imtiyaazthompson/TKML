@@ -1,6 +1,8 @@
-[label:myLabel](width="" height="" bg="" fg=""):"Hello, World"
-[label:myLabel_2]():"Foo bar"
-[button:myButton]():"my button"
-[button:myButton_2](width="12" height="12" bg="black" fg="blue"):"Press me!"
-[entry:nameEntry]():"default"
-[entry:nameEntry_2](fg="yellow" bg="blue" width="50"):"Name"
+[frame:myFrame] {
+    [label:myLabel](width="" height="" bg="" fg=""):"Hello, World"
+    [label:myLabel_2]():"Foo bar"
+    [button:myButton]():"my button"
+    [button:myButton_2](width="12" height="12" bg="black" fg="blue"):"Press me!"
+    [entry:nameEntry]():"default"
+    [entry:nameEntry_2](fg="yellow" bg="blue" width="50"):"Name"
+}
