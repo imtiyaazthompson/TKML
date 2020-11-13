@@ -10,6 +10,7 @@ def main():
 
     # Parse till EOF
     tokens = []
+    packing = []
     while True:
         next_line = p.get_next_line()
         if next_line == "":
@@ -20,9 +21,14 @@ def main():
                 raise TokenException("Duplicate token name encountered: " + next_token.get_name())
             else:
                 tokens.append(next_token)
+                packing.append(next_token.get_name()) # Preserve user order for packing widgets
 
+    # Sort Tokens
+    # Ensure widgets are written to source according to type precedence
+    tokens.sort(key = lambda token: token.get_type())
     # Source Code generation
-    gen_source(tokens)
+    gen_source(tokens,packing)
+    print("Template produced successfully!")
 
 
 if __name__ == "__main__":

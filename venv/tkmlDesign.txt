@@ -1,3 +1,1 @@
-Line by Line reading
-
-[label](width="",height="",bg="",fg=""): Label Text
+TODO: Ordering of widgets according to user, leave the packing() to the user!
