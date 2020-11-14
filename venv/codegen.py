@@ -37,6 +37,8 @@ def write_setup(tokens):
             bg = info["bg"] if info["bg"] != "" else -1
             fg = info["fg"] if info["fg"] != "" else -1
 
+        # Get the parent of the current token
+        # Decide which frame a widget belongs to based on its parent
         parent = token.get_parent()
         if token.get_type() == WidgetType.LABEL:
             # Deal with different cases of back/foreground information
