@@ -29,6 +29,7 @@ class Token:
         self.widget_name = widget_name
         self.info = info
         self.text = text
+        self.parent = None
 
     def __eq__(self, item):
         return True if self.widget_name == item.widget_name else False

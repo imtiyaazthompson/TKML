@@ -6,7 +6,7 @@
     [frame:ButtonFrame] {
         [button:myButton]():"my button"
         [button:myButton_2](width="12" height="12" bg="black" fg="blue"):"Press me!"
-     }
+    }
     [frame:EntryFrame] {
         [entry:nameEntry]():"default"
         [entry:nameEntry_2](fg="yellow" bg="blue" width="50"):"Name"

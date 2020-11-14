@@ -24,7 +24,7 @@ def setup():
 	widgets["ButtonFrame"] = tk.Frame(master=widgets["myFrame"])
 	widgets['myButton'] = tk.Button(master=widgets["ButtonFrame"],text='my button',width=0,height=0,command=lambda: myButton_callback('''Your arguments go here'''))
 	widgets['myButton_2'] = tk.Button(master=widgets["ButtonFrame"],text='Press me!',width=0,height=0,command=lambda: myButton_2_callback('''Your arguments go here'''))
-	widgets["EntryFrame"] = tk.Frame(master=widgets["ButtonFrame"])
+	widgets["EntryFrame"] = tk.Frame(master=widgets["myFrame"])
 	widgets['nameEntry'] = tk.Entry(master=widgets["EntryFrame"],width=0)
 	widgets['nameEntry'].insert(0,"default")
 	widgets['nameEntry_2'] = tk.Entry(master=widgets["EntryFrame"],fg="yellow",bg="blue",width=50)
