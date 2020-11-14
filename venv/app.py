@@ -29,16 +29,19 @@ def main():
                 if next_token.get_type() == WidgetType.STARTFRAME:
                     in_frame = True
                     frame_stack.insert(0, next_token.get_name())
+
+                    # Set parents of frames
+                    next_token.parent = frame_stack[1] if len(frame_stack) >= 2 else None
                 elif next_token.get_type() == WidgetType.ENDFRAME:
                     in_frame = False
                     parent = (re.search("_(.+)", next_token.get_name())).groups()[0]
+                    # if the endframe does not belong to the proper start frame
                     if parent != frame_stack[0]:
                         raise BrokenFrameException("A Frame was not closed correctly")
                     frame_stack.pop(0)
-
-                if frame_stack:
-                    # Set the parent of the current token
-                    next_token.parent = frame_stack[0].get_name()
+                else:
+                    # Set the parent of the current token that is not a frame
+                    next_token.parent = frame_stack[0]
 
                 # Append tokens within the current frame
                 # Tokens for each frame need to be sorted according to precedence later
@@ -47,13 +50,10 @@ def main():
                     packing.append(next_token.get_name())  # Preserve user order for packing widgets
 
     # If still within a frame, raise exception
+    # Or if a frame was not closed properly, thus it not being removed from the stack
+    # Number start frames does not match the number of end frames
     if in_frame or frame_stack != []:
         raise BrokenFrameException("A frame was not closed correctly")
-
-    # Currently tokens are in parsed order in the list called: packing (excluding endframes)
-    # Use this to construct proper framing
-    for token in tokens:
-        print(token.get_name())
 
     # Sort Tokens
     # Ensure widgets are written to source according to type precedence

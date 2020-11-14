@@ -46,6 +46,9 @@ class Token:
     def get_text(self):
         return self.text
 
+    def get_parent(self):
+        return self.parent
+
     def __str__(self):
         stype = "TYPE: " + str(self.widget_type) + "\n"
         stext = "TEXT: " + self.text + "\n"
