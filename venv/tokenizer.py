@@ -9,6 +9,7 @@ import re
 
 class Tokenizer:
     static_endframe_counter = 0
+    static_frame_stack = []
 
     def tokenize(self, line):
         """Generate Token objects from each line of parsed input"""
@@ -33,6 +34,7 @@ class Tokenizer:
             if match is None:
                 raise BrokenFrameException("Opening frame delimiter is missing")
             else:
+                self.static_frame_stack.insert(0, token_name)
                 return Token(token_type, token_name, None, None)
 
         if token_type == WidgetType.ENDFRAME:
@@ -64,7 +66,7 @@ class Tokenizer:
             name = match.groups()[1]
         else:
             tok_type = (match.groups()[0]).strip()
-            name = f"endframe_{self.static_endframe_counter}"
+            name = f"endframe_{(self.static_frame_stack.pop(0))}"
             self.static_endframe_counter += 1
 
         ttype = None

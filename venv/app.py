@@ -3,6 +3,7 @@ from tkmlparser import Parser
 from tokenizer import Tokenizer
 from exceptionlib import TokenException, BrokenFrameException
 from widget_type import WidgetType
+import re
 
 
 def main():
@@ -39,9 +40,14 @@ def main():
     if in_frame:
         raise BrokenFrameException("A frame was not closed correctly")
 
+    # Currently tokens are in parsed order in the list called: packing (excluding endframes)
+    # Use this to construct proper framing
+    for token in tokens:
+        print(token.get_name())
+
     # Sort Tokens
     # Ensure widgets are written to source according to type precedence
-    tokens.sort(key=lambda token: token.get_type())
+    # tokens.sort(key=lambda token: token.get_type())
     # Source Code generation
     gen_source(tokens, packing)
     print("Template produced successfully!")

@@ -1,10 +1,5 @@
 TODO: Think about frame nesting
 TODO: fix get_arg functions in tokenizer to accomadate for None matches
-TODO: Fix the framing system, from app, we have frames that contain a list of its widgets in that frame
-      pass those frames as a dict of lists to gencode
-      For every frame
-        For every token/widget in that frame
-            gen code for that widget, which include the first widget which is the frame
 
-
-TODO: Rethink the framing system
+TODO: Rethink the framing system, currently simplest solution is to generate code based on the order of widgets
+TODO: provide in the .tkml file from the user
